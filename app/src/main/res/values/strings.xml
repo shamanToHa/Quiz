@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CountriesQuiz</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="check">check</string>
+    <string name="question">Please, type the capital of</string>
+    <string name="login">login</string>
+    <string name="password">password</string>
+    <string name="answer_hint">type your answer</string>
+</resources>
