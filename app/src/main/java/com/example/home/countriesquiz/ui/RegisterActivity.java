@@ -3,11 +3,7 @@ package com.example.home.countriesquiz.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -44,11 +40,11 @@ public class RegisterActivity extends AppCompatActivity {
     @OnClick(R.id.btn_signUp)
     public void registerUser() {
         if (String.valueOf(username.getText()).equals("")) {
-            Toast.makeText(this, "please input login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.input_login, Toast.LENGTH_SHORT).show();
         } else if (String.valueOf(password.getText()).equals("")) {
-            Toast.makeText(this, "please input password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.input_pass, Toast.LENGTH_SHORT).show();
         } else if (checkUsername(String.valueOf(username.getText()))) {
-            Toast.makeText(this, "user already exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.user_exist, Toast.LENGTH_SHORT).show();
         } else {
             UserLocalStore.storeUser(new User(String.valueOf(username.getText()),
                     String.valueOf(password.getText())), this);

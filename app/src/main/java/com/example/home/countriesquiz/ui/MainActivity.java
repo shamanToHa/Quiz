@@ -2,9 +2,8 @@ package com.example.home.countriesquiz.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,11 +12,9 @@ import com.example.home.countriesquiz.R;
 import com.example.home.countriesquiz.model.Country;
 import com.example.home.countriesquiz.model.User;
 import com.example.home.countriesquiz.network.Retrofit;
+import com.example.home.countriesquiz.util.CountryLocalStore;
 import com.example.home.countriesquiz.util.UserLocalStore;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,16 +30,13 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
     private LinkedList<Country> countries;
     private LinkedList<Country> answers;
-    public static final String COUNTRY_STORAGE_NAME = "Countries";
     private Country country;
     @BindView(R.id.question)
     TextView question;
     @BindView(R.id.answer)
     EditText answer;
     private boolean userIsLoggedIn;
-    private static SharedPreferences countryLocalDatabase;
-    private static Type itemsListType = new TypeToken<List<Country>>() {
-    }.getType();
+
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -61,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         super.onResume();
         countries = new LinkedList<>();
         answers = new LinkedList<>();
-        countryLocalDatabase = getSharedPreferences(COUNTRY_STORAGE_NAME, Context.MODE_PRIVATE);
-        if (countryLocalDatabase.contains(COUNTRY_STORAGE_NAME)) {
-            countries.addAll(loadCountries());
+
+        if (CountryLocalStore.isCountriesStored(this)) {
+            countries.addAll(CountryLocalStore.loadCountries(this));
             Collections.shuffle(countries);
         } else getCountriesFromNet();
         if (!userIsLoggedIn) {
@@ -76,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
     public void checkQuestion() {
         if (country.capital.equalsIgnoreCase(String.valueOf(answer.getText()))) {
             answers.add(country);
-            Toast.makeText(this, "Correct " + country.capital, Toast.LENGTH_SHORT).show();
-        } else Toast.makeText(this, "Wrong  " + country.capital, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.correct) + country.capital, Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(this, getString(R.string.wrong) + country.capital, Toast.LENGTH_SHORT).show();
         answer.setText("");
         askQuestion();
     }
@@ -87,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
         if (checkUser(new User(username, password))) {
             userIsLoggedIn = true;
         } else {
-            Toast.makeText(this, "incorrect name or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.incorrect, Toast.LENGTH_SHORT).show();
             new LoginDialog().show(getSupportFragmentManager(), "tag");
         }
     }
@@ -112,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
             public void success(List<Country> countriesList, Response response) {
                 countries.addAll(countriesList);
                 Collections.shuffle(countries);
-                storeCountries(countries);
+                CountryLocalStore.storeCountries(countries, MainActivity.this);
             }
 
             @Override
@@ -120,18 +114,6 @@ public class MainActivity extends AppCompatActivity implements LoginDialog.Login
 
             }
         });
-    }
-
-    private List<Country> loadCountries() {
-        countryLocalDatabase = getSharedPreferences(COUNTRY_STORAGE_NAME, Context.MODE_PRIVATE);
-        return new Gson().fromJson(countryLocalDatabase.getString(COUNTRY_STORAGE_NAME, ""), itemsListType);
-    }
-
-    private void storeCountries(List<Country> countries) {
-        countryLocalDatabase = getSharedPreferences(COUNTRY_STORAGE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = countryLocalDatabase.edit()
-                .putString(COUNTRY_STORAGE_NAME, new Gson().toJson(countries));
-        editor.apply();
     }
 
 

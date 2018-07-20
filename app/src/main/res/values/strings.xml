@@ -6,4 +6,11 @@
     <string name="login">login</string>
     <string name="password">password</string>
     <string name="answer_hint">type your answer</string>
+    <string name="incorrect">incorrect name or password</string>
+    <string name="correct">Correct</string>
+    <string name="wrong">Wrong</string>
+    <string name="register">register</string>
+    <string name="input_login">please input login</string>
+    <string name="input_pass">please input password</string>
+    <string name="user_exist">user already exist</string>
 </resources>

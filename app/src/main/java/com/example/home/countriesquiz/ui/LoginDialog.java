@@ -27,7 +27,7 @@ public class LoginDialog extends AppCompatDialogFragment {
         username = view.findViewById(R.id.dialog_username);
         password = view.findViewById(R.id.dialog_password);
         builder.setView(view)
-                .setNeutralButton("register", new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.register, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RegisterActivity.start(view.getContext());

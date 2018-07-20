@@ -10,13 +10,13 @@ import retrofit.http.GET;
 
 public class Retrofit {
     private static final String ENDPOINT = "http://restcountries.eu/rest";
-    private static Apilinterface apilinterface;
+    private static ApiInterface apiInterface;
 
     static {
         initialize();
     }
 
-    interface Apilinterface {
+    interface ApiInterface {
         @GET("/v2/regionalbloc/eu")
         void getCountries(Callback<List<Country>> callback);
 
@@ -27,10 +27,10 @@ public class Retrofit {
                 .setEndpoint(ENDPOINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
-        apilinterface = restAdapter.create(Apilinterface.class);
+        apiInterface = restAdapter.create(ApiInterface.class);
     }
 
     public static void getCountries(Callback<List<Country>> callback) {
-        apilinterface.getCountries(callback);
+        apiInterface.getCountries(callback);
     }
 }
